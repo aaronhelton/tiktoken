@@ -24,7 +24,10 @@ def _available_plugin_modules() -> Sequence[str]:
     #   packages don't quite do what you want with editable installs
     mods = []
     plugin_mods = pkgutil.iter_modules(tiktoken_ext.__path__, tiktoken_ext.__name__ + ".")
-    for _, mod_name, _ in plugin_mods:
+    filtered_plugin_mods = [(loader, mod_name, ispkg) for loader, mod_name, ispkg in plugin_mods if not mod_name.endswith('__pycache__')]
+
+    for _, mod_name, _ in filtered_plugin_mods:
+        #for _, mod_name, _ in plugin_mods:
         mods.append(mod_name)
     return mods
 
